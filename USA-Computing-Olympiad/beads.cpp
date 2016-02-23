@@ -15,7 +15,7 @@ int main()
 	ifstream fin("beads.in");
 	ofstream fout("beads.out");
 	
-	vector<int> count;
+	vector<int> count;      
 	string array;
 	int size;
 
