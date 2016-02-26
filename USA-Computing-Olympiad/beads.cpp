@@ -1,58 +1,71 @@
 /*
 NAME: phn101
+PROB: beads
 LANG: C++
-PROG: beads
 */
 
 #include <iostream>
-#include <string>
 #include <fstream>
-#include <vector>
 using namespace std;
+
+int mod(int n, int m)
+{
+	if (n < 0)
+		n += m;
+	return n % m;
+}
 
 int main()
 {
-	ifstream fin("beads.in");
-	ofstream fout("beads.out");
+	int size = 0;
+	string array = "";
 	
-	vector<int> count;      
-	string array;
-	int size;
-
+	ifstream fin ("beads.in");
+	ofstream fout ("beads.out");
+	int sum = 0;
+	int index = 0;
 	fin >> size >> array;
 
-	array = array + array;
-	size = size * 2;
-	
-	int countChar = 0;
-	char firstChar;
-	char secondChar = array[0];
-
-	for (int i = 1; i < size - 1; i++)
+	for (int i = 0; i < size; i++)
 	{
-		firstChar = secondChar;
-		secondChar = array[i];
-		countChar++;
-		if (firstChar != secondChar)
+		int index1 = mod(i + 1, size);
+		int index2 = i;
+		char color = 'w';
+		int count1 = 0;
+		int count2 = 0;
+
+		for (count1 = 0; count1 < size; count1++, index1 = mod(index1 + 1, size))
 		{
-			count.push_back(countChar);
-			countChar = 0;
+
+			if (color == 'w' && array[index1] != 'w')
+				color = array[index1];
+			
+			// condition to break the loop
+			if (color != 'w' && array[index1] != 'w' && array[index1] != color)
+				break;
+		}
+
+		color = 'w';
+
+		for (count2 = 0; count2 < size; count2++, index2 = mod(index2 - 1, size))
+		{
+			if (color == 'w' && array[index2] != 'w')
+				color = array[index2];
+
+			if (color != 'w' && array[index2] != 'w' && array[index2] != color)
+				break;
+		}
+
+
+		if (sum < count1 + count2)
+		{
+			sum = count1 + count2;
+			index = index2; 
 		}
 	}
-
-	int firstBeads = 0;
-	int secondBeads = 0;
-	int biggestBeads = 0;
-
-	for (int i = 0; i < count.size() - 1; i++)
-	{
-		firstBeads = count[i];
-		secondBeads = count[i + 1];
-
-		if (biggestBeads < firstBeads + secondBeads)
-			biggestBeads = firstBeads + secondBeads;
-	}
-
-	fout << biggestBeads;
+	if (sum > size)
+		sum = size;
+	
+	fout << sum << "\n";
 	return 0;
 }
